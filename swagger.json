@@ -1,0 +1,144 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Veterinaria",
+    "version": "1.0.0",
+    "description": "API simple para dueños, mascotas y controles"
+  },
+  "servers": [{ "url": "http://localhost:8080" }],
+  "paths": {
+    "/duenos": {
+      "get": {
+        "summary": "Listar dueños",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Dueno" } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear dueño",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/DuenoCreate" } }
+          }
+        },
+        "responses": { "201": { "description": "Creado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/IdResponse" } } } } }
+      }
+    },
+    "/mascotas": {
+      "get": {
+        "summary": "Listar mascotas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Mascota" } } }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear mascota",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/MascotaCreate" } }
+          }
+        },
+        "responses": { "201": { "description": "Creado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/IdResponse" } } } } }
+      }
+    },
+    "/mascotas/{id}/historial": {
+      "get": {
+        "summary": "Historial de controles",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": {
+          "200": { "description": "OK", "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Control" } } } } },
+          "404": { "description": "No encontrado" }
+        }
+      }
+    },
+    "/controles": {
+      "post": {
+        "summary": "Registrar control",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ControlCreate" } }
+          }
+        },
+        "responses": { "201": { "description": "Creado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/IdResponse" } } } } }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IdResponse": { "type": "object", "properties": { "id": { "type": "integer" } } },
+      "Dueno": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "nombre": { "type": "string" },
+          "documento": { "type": "string" },
+          "telefono": { "type": "string" }
+        }
+      },
+      "DuenoCreate": {
+        "type": "object",
+        "required": ["nombre", "documento", "telefono"],
+        "properties": {
+          "nombre": { "type": "string" },
+          "documento": { "type": "string" },
+          "telefono": { "type": "string" }
+        }
+      },
+      "Mascota": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "nombre": { "type": "string" },
+          "edad": { "type": "integer" },
+          "especie": { "type": "string" },
+          "duenoId": { "type": "integer" }
+        }
+      },
+      "MascotaCreate": {
+        "type": "object",
+        "required": ["nombre", "edad", "especie", "duenoId"],
+        "properties": {
+          "nombre": { "type": "string" },
+          "edad": { "type": "integer" },
+          "especie": { "type": "string" },
+          "duenoId": { "type": "integer" }
+        }
+      },
+      "Control": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "fecha": { "type": "string" },
+          "tipo": { "type": "string" },
+          "observaciones": { "type": "string" }
+        }
+      },
+      "ControlCreate": {
+        "type": "object",
+        "required": ["mascotaId", "fecha", "tipo"],
+        "properties": {
+          "mascotaId": { "type": "integer" },
+          "fecha": { "type": "string", "example": "01/01/2025" },
+          "tipo": { "type": "string" },
+          "observaciones": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+
